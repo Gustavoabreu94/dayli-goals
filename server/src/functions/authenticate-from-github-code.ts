@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
 import { users } from '../db/schema'
+import { authenticateUser } from '../modules/auth'
 import {
   getAcessTokenFromCode,
   getUserFromAccessToken,
@@ -24,7 +25,7 @@ export async function authenticateFromGithubCode({
 
   const userAlreadyExists = result.length > 0
 
-  let userId: string | null
+  let userId = ''
 
   if (userAlreadyExists) {
     userId = result[0].id
@@ -40,4 +41,8 @@ export async function authenticateFromGithubCode({
       userId = insertedUser
     }
   }
+
+  const token = await authenticateUser(userId)
+
+  return token
 }
