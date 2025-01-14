@@ -9,7 +9,7 @@ interface CreateGoalCompletionRequest {
 }
 export async function createGoalCompletion({
   goalId,
-  userId
+  userId,
 }: CreateGoalCompletionRequest) {
   const lastDayOfWeek = dayjs().endOf('week').toDate()
   const firstDayOfWeek = dayjs().startOf('week').toDate()
@@ -43,7 +43,7 @@ export async function createGoalCompletion({
     })
     .from(goals)
     .leftJoin(goalCompletionCounts, eq(goalCompletionCounts.goalId, goals.id))
-    .where(and(eq(goals.id, goalId),eq(goals.userId, userId)))
+    .where(and(eq(goals.id, goalId), eq(goals.userId, userId)))
 
   const { completionCount, desiredWeeklyFrequency } = result[0]
 
@@ -51,10 +51,14 @@ export async function createGoalCompletion({
     throw new Error('Goal already completed this week!')
   }
 
-  const insertResult = await db
+  const [goalCompletion] = await db
     .insert(goalCompletions)
     .values({
       goalId,
     })
     .returning()
+
+  return {
+    goalCompletion,
+  }
 }
