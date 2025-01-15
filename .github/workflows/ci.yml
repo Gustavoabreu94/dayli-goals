@@ -1,9 +1,9 @@
-
-name: Run tests
+name: Run backend tests
 on:
   push:
     paths:
       - 'server/**'
+
 jobs:
   run-ci:
     name: Run tests
@@ -23,10 +23,21 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      - run: npm ci
-      - run: npm run test
+
+      - name: Install dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: Run tests
+        run: |
+          cd server
+          npm test
