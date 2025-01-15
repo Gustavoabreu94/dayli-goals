@@ -10,6 +10,7 @@ export const getProfileRoute: FastifyPluginAsyncZod = async app => {
       onRequest: [authenticateUserHook],
       schema: {
         tags: ['auth'],
+        operationId: 'getProfile',
         description: 'Get authenticated user profile',
         response: {
           200: z.object({
@@ -18,7 +19,7 @@ export const getProfileRoute: FastifyPluginAsyncZod = async app => {
               name: z.string().nullable(),
               email: z.string().nullable(),
               avatarUrl: z.string().url(),
-            })
+            }),
           }),
         },
       },
@@ -26,9 +27,9 @@ export const getProfileRoute: FastifyPluginAsyncZod = async app => {
     async request => {
       const userId = request.user.sub
 
-      const { user } =  await getUser({ userId })
+      const { user } = await getUser({ userId })
 
-      return  { profile: user }
+      return { profile: user }
     }
   )
 }
