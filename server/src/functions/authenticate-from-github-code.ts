@@ -3,46 +3,46 @@ import { db } from '../db'
 import { users } from '../db/schema'
 import { authenticateUser } from '../modules/auth'
 import {
-  getAcessTokenFromCode,
+  getAccessTokenFromCode,
   getUserFromAccessToken,
 } from '../modules/github-oauth'
 
-interface AuthenticateFromGithubCodeRequest {
+interface AuthenticateFromGitHubCodeRequest {
   code: string
 }
 
 export async function authenticateFromGithubCode({
   code,
-}: AuthenticateFromGithubCodeRequest) {
-  const { access_token } = await getAcessTokenFromCode(code)
-
-  const githubUser = await getUserFromAccessToken(access_token)
+}: AuthenticateFromGitHubCodeRequest) {
+  const accessToken = await getAccessTokenFromCode(code)
+  const githubUser = await getUserFromAccessToken(accessToken)
 
   const result = await db
     .select()
     .from(users)
     .where(eq(users.externalAccountId, githubUser.id))
 
-  const userAlreadyExists = result.length > 0
+  let userId: string | null
 
-  let userId = ''
+  const userAlreadyExists = result.length > 0
 
   if (userAlreadyExists) {
     userId = result[0].id
   } else {
-    if (!userAlreadyExists) {
-      const [insertedUser] = await db.insert(users).values({
+    const [insertedUser] = await db
+      .insert(users)
+      .values({
         name: githubUser.name,
         email: githubUser.email,
         avatarUrl: githubUser.avatar_url,
         externalAccountId: githubUser.id,
       })
+      .returning()
 
-      userId = insertedUser
-    }
+    userId = insertedUser.id
   }
 
   const token = await authenticateUser(userId)
 
-  return token
+  return { token }
 }
