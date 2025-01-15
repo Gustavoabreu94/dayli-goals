@@ -7,10 +7,8 @@ interface GetUserResponse {
   avatar_url: string
 }
 
-export async function getAcessTokenFromCode(code: string) {
-  const accessTokenURL = new URL(
-    'GET https://github.com/login/oauth/access_token'
-  )
+export async function getAccessTokenFromCode(code: string) {
+  const accessTokenURL = new URL('https://github.com/login/oauth/access_token')
 
   accessTokenURL.searchParams.set('client_id', env.GITHUB_CLIENT_ID)
   accessTokenURL.searchParams.set('client_secret', env.GITHUB_CLIENT_SECRET)

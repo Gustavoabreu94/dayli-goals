@@ -11,5 +11,5 @@ export async function authenticateUser(userId: string) {
     .setExpirationTime('1d')
     .sign(secret)
 
-  return { token }
+  return token
 }
