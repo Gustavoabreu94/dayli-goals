@@ -24,8 +24,9 @@ export function Summary() {
   const firstDayOfWeek = dayjs().startOf('week').format('D MMM')
   const lastDayOfWeek = dayjs().endOf('week').format('D MMM')
 
-  const completedPercentage =
-    (data?.summary.completed * 100) / data?.summary.total
+  const completedPercentage = Math.round(
+    (data.summary.completed * 100) / data.summary.total
+  )
   return (
     <div className="py-10 max-w-[480px] px-5 mx-auto flex flex-col gap-6">
       <div className="flex items-center justify-between">
