@@ -1,25 +1,28 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
-import { createGoalCompletion } from '../http/create-goal-completion'
-import { getPendingGoals } from '../http/get-pedding-goals'
+import {
+  getGetPendingGoalsQueryKey,
+  getGetWeekSummaryQueryKey,
+  useCreateCompletion,
+  useGetPendingGoals,
+} from '../http/generated/api'
 import { OutlineButton } from './ui/outline-button'
 
-export function PedingGoals() {
+export function PendingGoals() {
   const queryClient = useQueryClient()
-  const { data } = useQuery({
-    queryKey: ['pedding-goals'],
-    queryFn: getPendingGoals,
-  })
+
+  const { data } = useGetPendingGoals()
+  const { mutateAsync: createCompletion } = useCreateCompletion()
 
   if (!data) {
     return null
   }
 
   async function handleCompleteGoal(goalId: string) {
-    await createGoalCompletion(goalId)
+    await createCompletion({ data: { goalId } })
 
-    queryClient.invalidateQueries({ queryKey: ['summary'] })
-    queryClient.invalidateQueries({ queryKey: ['pedding-goals'] })
+    queryClient.invalidateQueries({ queryKey: getGetPendingGoalsQueryKey() })
+    queryClient.invalidateQueries({ queryKey: getGetWeekSummaryQueryKey() })
   }
 
   return (
