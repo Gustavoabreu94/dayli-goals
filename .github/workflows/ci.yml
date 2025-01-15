@@ -26,11 +26,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Fetch all branches
+        run: git fetch --prune --unshallow
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
+
+      - name: Check if package-lock.json exists
+        run: |
+          if [ ! -f "server/package-lock.json" ]; then
+            echo "Error: package-lock.json not found in server/ directory!"
+            exit 1
+          fi
 
       - name: Install dependencies
         run: |
