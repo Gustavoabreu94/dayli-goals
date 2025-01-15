@@ -1,5 +1,9 @@
 import { env } from '../env'
 
+interface AccessTokenResponse {
+  access_token: string
+}
+
 interface GetUserResponse {
   id: number
   name: string | null
@@ -10,9 +14,9 @@ interface GetUserResponse {
 export async function getAccessTokenFromCode(code: string) {
   const accessTokenURL = new URL('https://github.com/login/oauth/access_token')
 
-  accessTokenURL.searchParams.set('client_id', env.GITHUB_CLIENT_ID)
-  accessTokenURL.searchParams.set('client_secret', env.GITHUB_CLIENT_SECRET)
-  accessTokenURL.searchParams.set('code ', code)
+  accessTokenURL.searchParams.append('client_id', env.GITHUB_CLIENT_ID)
+  accessTokenURL.searchParams.append('client_secret', env.GITHUB_CLIENT_SECRET)
+  accessTokenURL.searchParams.append('code', code)
 
   const response = await fetch(accessTokenURL, {
     method: 'POST',
@@ -21,17 +25,19 @@ export async function getAccessTokenFromCode(code: string) {
     },
   })
 
-  return await response.json()
+  const { access_token }: AccessTokenResponse = await response.json()
+
+  return access_token
 }
 
-export async function getUserFromAccessToken(
-  accessToken: string
-): Promise<GetUserResponse> {
+export async function getUserFromAccessToken(accessToken: string) {
   const response = await fetch('https://api.github.com/user', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   })
 
-  return response.json()
+  const data: GetUserResponse = await response.json()
+
+  return data
 }

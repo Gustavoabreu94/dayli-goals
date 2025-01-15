@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import ptBR from 'dayjs/locale/pt-BR'
 import { CheckCircle2, Plus } from 'lucide-react'
 import { getSummary } from '../http/get-summary'
-import { PedingGoals } from './pedding-goals'
+import { PendingGoals } from './peding-goals'
 import { Button } from './ui/button'
 import { InOrbitIcon } from './ui/in-orbit-icon'
 import { Progress, ProgressIndicator } from './ui/progress-bar'
@@ -61,7 +61,7 @@ export function Summary() {
 
         <Separator />
 
-        <PedingGoals />
+        <PendingGoals />
 
         <div className="flex flex-col gap-6">
           <h2 className="text-xl font-medium"> Sua semana</h2>

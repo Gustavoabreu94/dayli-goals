@@ -10,6 +10,8 @@ import { fastifyCors } from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifySwaggerUi } from '@fastify/swagger-ui'
+import { writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
 import { env } from '../env'
 import { authenticateFromGithubRoute } from './routes/authenticate-from-github'
 import { createCompletionRoute } from './routes/create-completion'
@@ -59,3 +61,15 @@ app
   .then(() => {
     console.log('HTTP server running')
   })
+
+if (env.NODE_ENV === 'development') {
+  const specFile = resolve(__dirname, '../../swagger.json')
+
+  app.ready().then(() => {
+    const spec = JSON.stringify(app.swagger(), null, 2)
+
+    writeFile(specFile, spec).then(() => {
+      console.log('Swagger spec')
+    })
+  })
+}
