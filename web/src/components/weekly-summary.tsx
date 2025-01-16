@@ -13,7 +13,6 @@ import { UserLevel } from './user-level'
 import { UserProfile } from './user-profile'
 
 dayjs.locale('pt-br')
-
 interface WeeklySummaryProps {
   summary: GetWeekSummary200Summary
 }
