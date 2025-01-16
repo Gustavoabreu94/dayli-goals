@@ -34,9 +34,3 @@ export function Application() {
     </Dialog>
   )
 }
-
-//      {data.summary.total && data.summary.total > 0 ? (
-//     <WeeklySummary summary={data.summary} />
-//   ) : (
-//     <EmptyGoals />
-//   )}
