@@ -1,6 +1,6 @@
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import dayjs from 'dayjs'
-// import ptBR from 'dayjs/locale/pt-BR'
+import 'dayjs/locale/pt-br'
 import { ArrowLeft, ArrowRight, CheckCircle2, Plus } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import type { GetWeekSummary200Summary } from '../http/generated/api'
@@ -12,7 +12,7 @@ import { Separator } from './ui/separator'
 import { UserLevel } from './user-level'
 import { UserProfile } from './user-profile'
 
-// dayjs.locale(ptBR)
+dayjs.locale('pt-br')
 
 interface WeeklySummaryProps {
   summary: GetWeekSummary200Summary
