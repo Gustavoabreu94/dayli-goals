@@ -112,7 +112,6 @@ export function WeeklySummary({ summary }: WeeklySummaryProps) {
           <span>{completedPercentage}%</span>
         </div>
       </div>
-
       <Separator />
 
       {isCurrentWeek && <PendingGoals />}
